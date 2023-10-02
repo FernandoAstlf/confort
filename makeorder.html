@@ -5,7 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pedidos</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="styles.css">
+  <style>body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    padding: 20px;
+  }
+  
+.login-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label, input, button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+.login-container {
+  width: 80%;
+  padding: 10px; 
+}
+.admin-container {
+  padding: 20px;
+}
+
+.new-order, .existing-orders {
+  margin-bottom: 20px;
+}
+  
+  form {
+    margin-bottom: 20px;
+  }
+    
+/* Container for the admin section */
+.admin-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Header section */
+h1 {
+  background-color: #4a90e2; /* Changed color to blue */
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  text-align: center; /* Centered the text */
+}
+
+/* New order section */
+.new-order {
+  padding: 20px;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+/* Input fields */
+input[type="text"], textarea {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Button */
+button {
+  background-color: #4a90e2; /* Changed color to blue */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Button hover effect */
+button:hover {
+  background-color: #4285d1; /* Darker blue for hover effect */
+}</style>
 </head>
 <body>
   <div class="admin-container">
