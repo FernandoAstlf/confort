@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 'http://confort-env.eba-an3gpp3m.sa-east-1.elasticbeanstalk.com/';
 const mysql = require('mysql2/promise');
 const moment = require('moment');
 const cors = require('cors');
