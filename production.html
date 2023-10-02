@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produção</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <style>
+        /* Estilo para o botão de confirmação */
+        #confirmButton {
+            background-color: #007bff; /* Cor de fundo azul */
+            color: white; /* Cor do texto branco */
+            border: none; /* Sem borda */
+            padding: 10px 20px; /* Padding */
+            margin: 5px; /* Margem */
+            border-radius: 5px; /* Borda arredondada */
+            cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+        }
+
+        /* Estilo para o botão de cancelamento */
+        #cancelButton {
+            background-color: #f8d7da; /* Cor de fundo vermelho claro */
+            color: #dc3545; /* Cor do texto vermelho */
+            border: none; /* Sem borda */
+            padding: 10px 20px; /* Padding */
+            margin: 5px; /* Margem */
+            border-radius: 5px; /* Borda arredondada */
+            cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+        }
+
+        /* Estilo para o botão ao passar o mouse */
+        #confirmButton:hover, #cancelButton:hover {
+            opacity: 0.9; /* Opacidade ao passar o mouse */
+        }
+
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dialog-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .center-text {
+        text-align: center;
+        }
+
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Style for the body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+
+        /* Style for the container */
+        .production-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        /* Style for the heading */
+        h1 {
+            background-color: #007bb5;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        /* Style for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* Style for the table headers */
+        th {
+            background-color: #007bb5;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Style for the table rows */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .even-row {
+        filter: brightness(95%); /* Escurece a cor de fundo em 10% */
+        }
+
+        /* Style for the table cells */
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Style for the checkbox */
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .icon-cell {
+            text-align: center;
+            background-color: white !important;
+        }
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Style for the body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+
+        /* Style for the container */
+        .production-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 1200px; /* Adicionado um max-width para não esticar demais em telas grandes */
+        }
+
+        /* ... restante do código ... */
+
+        /* Media query para telas com largura máxima de 600px */
+        @media (max-width: 600px) {
+            th, td {
+                font-size: 12px; /* Reduzir o tamanho da fonte */
+                padding: 5px; /* Reduzir o padding */
+            }
+
+            h1 {
+                font-size: 18px; /* Reduzir o tamanho da fonte do título */
+                padding: 10px; /* Reduzir o padding */
+            }
+
+            .icon-cell i {
+                font-size: 12px; /* Reduzir o tamanho do ícone */
+            }
+
+            /* Adicionado para garantir que a tabela não transborde a tela */
+            .production-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="confirmationDialog" class="dialog">
+        <div class="dialog-content">
+            <p id="dialogText"></p>
+            <button id="confirmButton">Tenho certeza!</button>
+            <button id="cancelButton">Não tenho certeza</button>
+        </div>
+    </div>
+    <div class="production-container">
+        <h1>Produção</h1>
+        <table id="productionTable">
+            <thead>
+                <tr>
+                    <th></th> <!-- Coluna para ícones -->
+                    <th>Cliente</th>
+                    <th>Data da Entrega</th>
+                    <th class="center-text">Quantidade</th> <!-- Mova a coluna quantidade aqui -->
+                    <th>Produto</th> <!-- Nome da coluna alterado de Pedido para Produto -->
+                    <th class="center-text">Status</th>
+                    <th>Data de Produção</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- As linhas da tabela serão preenchidas dinamicamente aqui -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function formatDateDisplay(date) {
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = String(d.getSeconds()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        }
+
+
+        // Função para adicionar 10 dias à data do pedido
+        function addTenDays(date) {
+            const newDate = new Date(date);
+            newDate.setDate(newDate.getDate() + 10);
+            return newDate;
+        }
+
+        function handleCheckboxChange(checkbox, orderId, icon, newRow, orderDate, productionDateCell, quantity, product) {
+            // Se o checkbox está sendo marcado ou desmarcado, mostre o diálogo de confirmação
+            let confirmationMessage = `Tem certeza que o item <b>${quantity} ${product}</b> foi produzido?`;
+            if (!checkbox.checked) {
+                confirmationMessage = `Tem certeza que deseja desmarcar o item <b>${quantity} ${product}</b>?`;
+            }
+            document.getElementById('dialogText').innerHTML = confirmationMessage;
+            document.getElementById('confirmationDialog').style.display = 'flex';
+
+            // Quando o usuário clicar em "Tenho certeza!", feche o diálogo e mantenha o estado do checkbox
+            document.getElementById('confirmButton').onclick = function () {
+                document.getElementById('confirmationDialog').style.display = 'none';
+                updateOrderStatus(checkbox, orderId, icon, newRow, orderDate, productionDateCell);
+            };
+
+            // Quando o usuário clicar em "Não tenho certeza", reverta o estado do checkbox e feche o diálogo
+            document.getElementById('cancelButton').onclick = function () {
+                checkbox.checked = !checkbox.checked;
+                document.getElementById('confirmationDialog').style.display = 'none';
+            };
+        }
+
+        function updateOrderStatus(checkbox, orderId, icon, newRow, orderDate, productionDateCell) {
+            // Obtenha o estado atual do checkbox
+            const isChecked = checkbox.checked;
+
+            // Obtenha a data e hora atual
+            const currentDate = new Date();
+
+            // Formate a data e hora no formato desejado
+            const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}:${String(currentDate.getSeconds()).padStart(2, '0')}`;
+
+            // Crie um objeto com os dados a serem enviados para o servidor
+            const data = {
+                productionChecked: isChecked,
+                productionDate: isChecked ? formattedDate : null // Se o checkbox está marcado, envie a data e hora atual, caso contrário, envie null
+            };
+
+            // Faça uma requisição PUT para atualizar o estado do pedido no servidor
+            fetch(`http://localhost:3000/update-production/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data) // Converta os dados em uma string JSON
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Atualize o ícone e a cor da linha
+                        if (checkbox.checked) {
+                            icon.className = 'fas fa-check-circle';
+                            icon.style.color = 'green';
+                            newRow.style.backgroundColor = '#d4edda'; // verde claro
+                            productionDateCell.textContent = formatDateDisplay(formattedDate);
+                        } else {
+                            productionDateCell.textContent = '';
+                            icon.className = 'fas fa-exclamation-circle';
+                            icon.style.color = '#FFA500'; // Amarelo mais escuro
+                            newRow.style.backgroundColor = ''; // Cor original
+                        }
+                    } else {
+                        throw new Error('Erro ao atualizar o status do pedido.');
+                    }
+                })
+        }
+
+
+
+
+
+        // Função para carregar os dados na tabela
+    // Função para carregar os dados na tabela
+    function loadTableData() {
+
+        // URL do seu endpoint que retorna os dados dos pedidos
+        const url = 'http://localhost:3000/orders';
+
+        // Faça uma requisição GET para obter os dados dos pedidos
+        fetch(url)
+            .then(response => response.json()) // Converta a resposta em um objeto JSON
+            .then(data => {
+                // Obtenha a referência do corpo da tabela
+                const tbody = document.getElementById('productionTable').getElementsByTagName('tbody')[0];
+
+                // Itere sobre os dados dos pedidos e adicione as linhas na tabela
+                data.forEach((order, index) => {
+                    // Crie uma nova linha na tabela
+                    const newRow = tbody.insertRow();
+                       
+                    // Adicione as células na linha
+                    const iconCell = newRow.insertCell(0);
+                    iconCell.className = 'icon-cell';
+
+                    // Adicione um ícone na célula de ícones
+                    const icon = document.createElement('i');
+                    iconCell.appendChild(icon);
+
+                    // Adicione outras células
+                    const clientNameCell = newRow.insertCell(1);
+                    const orderDateCell = newRow.insertCell(2);
+                    const quantityCell = newRow.insertCell(3); // Mova a célula quantidade aqui
+                    const orderDetailsCell = newRow.insertCell(4); // Ajuste o índice da célula de detalhes do pedido
+                    const statusCell = newRow.insertCell(5); // Ajuste o índice da célula de status
+                    statusCell.className = 'center-content';
+                    const productionDateCell = newRow.insertCell(6); // Ajuste o índice da célula de data de produção
+
+                    // Preencha as células com os dados
+                    clientNameCell.textContent = order.clientName;
+                    orderDateCell.textContent = addTenDays(order.orderDate).toLocaleDateString();
+                    quantityCell.className = 'center-text';
+                    quantityCell.textContent = order.quantidade; // Preencha a célula quantidade aqui
+                    orderDetailsCell.textContent = order.produto;
+
+                    // Adicione um checkbox na célula de status
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'checkbox-center'; 
+                    checkbox.checked = order.productionChecked;
+                    checkbox.style.display = 'block';
+                    checkbox.style.margin = '0 auto';
+
+                    checkbox.onchange = () => handleCheckboxChange(checkbox, order.id, icon, newRow, order.orderDate, productionDateCell, order.quantidade, order.produto);
+                    statusCell.appendChild(checkbox);
+
+
+                    // Atualize o ícone e a cor da linha com base no status do pedido e na diferença de dias
+                    if (order.productionChecked) {
+                        icon.className = 'fas fa-check-circle';
+                        icon.style.color = 'green';
+                        newRow.style.backgroundColor = '#d4edda'; // verde claro
+                    } else {
+                        icon.className = 'fas fa-exclamation-circle';
+                        icon.style.color = '#FFA500'; // Amarelo mais escuro
+                        newRow.style.backgroundColor = ''; // Cor original
+
+                        const deliveryDate = addTenDays(order.orderDate);
+                        const currentDate = new Date();
+                        const diffTime = deliveryDate - currentDate;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays <= 5) {
+                            icon.style.color = 'red'; // Ícone vermelho
+                            newRow.style.backgroundColor = '#f8d7da'; // vermelho claro
+                        }
+                    }
+                });
+
+            })
+            .catch(error => {
+                console.error('Erro ao carregar os dados da tabela:', error);
+            });
+        }
+
+
+        // Chame a função loadTableData quando a página for carregada
+        window.onload = loadTableData;
+    </script>
+</body>
+</html>
