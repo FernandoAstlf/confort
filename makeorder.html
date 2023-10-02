@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="admin-container">
+    <h1>Pedidos</h1>
+    <section class="new-order">
+      <form id="newOrderForm" action="http://localhost:3000/create-order" method="post">
+        <label for="orderDate">Data do Pedido:</label>
+        <input type="text" id="orderDate" name="orderDate" required>
+        <label for="clientName">Nome do Cliente:</label>
+        <input type="text" id="clientName" name="clientName" required>
+        <label for="orderDetails">Detalhes do Pedido:</label>
+        <textarea id="orderDetails" name="orderDetails" required></textarea>
+        <button type="submit">Criar Pedido</button>
+      </form>
+    </section>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    $(function() {
+      $("#orderDate").datepicker({
+        dateFormat: "dd/mm/yy"
+      });
+      $("#orderDate").datepicker("setDate", new Date());
+
+      document.getElementById('newOrderForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const clientName = document.getElementById('clientName').value;
+        const orderDate = document.getElementById('orderDate').value;
+        const orderDetails = document.getElementById('orderDetails').value;
+        
+        const response = await fetch('http://localhost:3000/create-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ clientName, orderDate, orderDetails })
+        });
+
+        // Tente analisar a resposta como JSON
+        let responseData;
+        try {
+          responseData = await response.json();
+        } catch (error) {
+          // Se a resposta não for JSON, exiba um erro
+          alert('Erro ao criar pedido. A resposta do servidor não é um JSON válido.');
+          return;
+        }
+        
+        if (response.ok && responseData.pdfLink) {
+          console.log(responseData);
+          alert(responseData.message);
+          const downloadButton = document.createElement('a');
+          
+          // Extrair o ID do arquivo do link do PDF
+          const fileId = new URL(responseData.pdfLink).pathname.split('/')[3];
+          
+          // Construir o novo URL com o parâmetro ?export=download
+          downloadButton.href = `https://drive.google.com/uc?export=download&id=${fileId}`;
+          
+          downloadButton.textContent = 'Baixar PDF';
+          downloadButton.setAttribute('download', ''); // Adicionando o atributo download
+          document.body.appendChild(downloadButton);
+        } else {
+          alert('Erro ao criar pedido.');
+        }
+
+
+      // Função para editar pedido
+      function editOrder(orderId, orderData) {
+        $.ajax({
+          url: `http://localhost:3000/order/${orderId}`,
+          type: 'PUT',
+          data: orderData,
+          success: function() {
+            alert('Pedido atualizado com sucesso!');
+          }
+        });
+      }
+
+      // Função para excluir pedido
+      function deleteOrder(orderId) {
+        $.ajax({
+          url: `http://localhost:3000/order/${orderId}`,
+          type: 'DELETE',
+          success: function() {
+            alert('Pedido excluído com sucesso!');
+          }
+        });
+      }
+
+      // Evento de clique para botão de editar
+      $(document).on('click', '.edit-button', function() {
+        const orderId = $(this).data('id');
+        const orderData = {
+          orderDate: $('#orderDate').val(),
+          clientName: $('#clientName').val(),
+          orderDetails: $('#orderDetails').val()
+        };
+        editOrder(orderId, orderData);
+      });
+
+      // Evento de clique para botão de excluir
+      $(document).on('click', '.delete-button', function() {
+        const orderId = $(this).data('id');
+        deleteOrder(orderId);
+      });
+    });
+  })
+  </script>
+</body>
+</html>
