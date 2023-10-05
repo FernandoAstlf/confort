@@ -272,7 +272,7 @@
             };
 
             // Faça uma requisição PUT para atualizar o estado do pedido no servidor
-            fetch(`http://localhost:3000/update-production/${orderId}`, {
+            fetch(`https://confort.azurewebsites.net/update-production/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
