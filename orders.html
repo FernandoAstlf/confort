@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pedidos</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <style>
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="orders-container">
+        <h1>Lista de Pedidos</h1>
+        <div id="orders-list"></div>
+    </div>
+
+    <script>$(document).ready(function() {
+        fetchOrders();
+    
+        async function fetchOrders() {
+            try {
+                const response = await fetch('https://confort.azurewebsites.net/orders');
+                const orders = await response.json();
+                displayOrders(orders);
+            } catch (error) {
+                console.error("Erro ao buscar pedidos:", error);
+            }
+        }
+    
+        function displayOrders(orders) {
+            const sortedOrders = orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            let currentMonth = null;
+    
+            for (const order of sortedOrders) {
+                const orderMonth = new Date(order.orderDate).toLocaleString('pt-BR', { month: 'long' });
+    
+                if (currentMonth !== orderMonth) {
+                    currentMonth = orderMonth;
+                    $('#orders-list').append(`<h2>${orderMonth}</h2>`);
+                }
+    
+                $('#orders-list').append(`
+                    <div class="order-item">
+                        ${order.reciboName}
+                        <button class="delete-button" data-recibo="${order.reciboName}">Excluir</button>
+                    </div>
+                `);
+            }
+    
+            $('.delete-button').click(async function() {
+                const reciboName = $(this).data('recibo');
+                const confirmDelete = confirm(`Deseja excluir o pedido ${reciboName}?`);
+    
+                if (confirmDelete) {
+                    try {
+                        // Remover do banco de dados
+                        const response = await fetch(`https://confort.azurewebsites.net/order/${reciboName}`, {
+                            method: 'DELETE'
+                        });
+    
+                        if (response.ok) {
+                            alert('Pedido excluído com sucesso!');
+                            location.reload(); // Recarregar a página
+                        } else {
+                            alert('Erro ao excluir pedido.');
+                        }
+                    } catch (error) {
+                        console.error("Erro ao excluir pedido:", error);
+                    }
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>
