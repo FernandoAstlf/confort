@@ -356,6 +356,11 @@
 
                     checkbox.onchange = () => handleCheckboxChange(checkbox, order.id, icon, newRow, order.orderDate, productionDateCell, order.quantidade, order.produto);
                     statusCell.appendChild(checkbox);
+                    if (order.productionDate) {
+                        productionDateCell.textContent = formatDateDisplay(order.productionDate);
+                    } else {
+                        productionDateCell.textContent = '';
+                    }
 
 
                     // Atualize o ícone e a cor da linha com base no status do pedido e na diferença de dias
