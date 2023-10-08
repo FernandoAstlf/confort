@@ -6,7 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrega</title>
     <style>
-        /* (Estilos já fornecidos anteriormente) */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        .delivery-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+            transition: background-color 0.3s ease;
+        }
+
+        .sub-row {
+            display: none;
+            background-color: #e6e6e6;
+        }
+
+        .sub-row > td:first-child {
+            background-color: #f8f8f8;
+            border: none;
+        }
+
+        .expand-button {
+            cursor: pointer;
+        }
     </style>
     <script>
         async function loadDeliveryTableData() {
