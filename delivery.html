@@ -41,7 +41,67 @@
             }
         }
 
-        // (Outras funções JS já fornecidas anteriormente)
+       function addOrdersToDeliveryTable(orders) {
+            const tbody = document.getElementById('deliveryTable').getElementsByTagName('tbody')[0];
+        
+            orders.forEach(order => {
+                const newRow = tbody.insertRow();
+        
+                const nameCell = newRow.insertCell(0);
+                const orderCell = newRow.insertCell(1);
+                const deliveryDateCell = newRow.insertCell(2);
+                const statusCell = newRow.insertCell(3);
+                const deliveredDateCell = newRow.insertCell(4);
+        
+                nameCell.textContent = order.clientName;
+                orderCell.innerHTML = `${order.reciboName} <span class="expand-button" onclick="toggleSubRows(this)">[+]</span>`;
+                deliveryDateCell.textContent = order.deliveryDate;
+                statusCell.innerHTML = `<input type="checkbox" onclick="toggleSubRowCheckboxes(this)" ${order.productionChecked === 1 ? 'checked' : ''}>`;
+                deliveredDateCell.textContent = order.deliveredDate;
+        
+                order.products.forEach(product => {
+                    const subRow = tbody.insertRow();
+                    subRow.classList.add('sub-row');
+        
+                    const emptyCell = subRow.insertCell(0);
+                    const productCell = subRow.insertCell(1);
+                    productCell.colSpan = 4;
+        
+                    productCell.innerHTML = `
+                        ${product.quantidade} ${product.produto} 
+                        <input type="checkbox" ${product.delivered ? 'checked' : ''}>
+                    `;
+                });
+            });
+        }
+
+        function toggleSubRows(button) {
+            const mainRow = button.closest('tr');
+            let nextRow = mainRow.nextElementSibling;
+        
+            while (nextRow && nextRow.classList.contains('sub-row')) {
+                if (nextRow.style.display === 'none' || !nextRow.style.display) {
+                    nextRow.style.display = 'table-row';
+                    button.textContent = '[-]';
+                } else {
+                    nextRow.style.display = 'none';
+                    button.textContent = '[+]';
+                }
+                nextRow = nextRow.nextElementSibling;
+            }
+        }
+        
+        function toggleSubRowCheckboxes(checkbox) {
+            const mainRow = checkbox.closest('tr');
+            let nextRow = mainRow.nextElementSibling;
+        
+            while (nextRow && nextRow.classList.contains('sub-row')) {
+                const productCheckbox = nextRow.querySelector('input[type="checkbox"]');
+                productCheckbox.checked = checkbox.checked;
+                nextRow = nextRow.nextElementSibling;
+            }
+        }
+
 
         window.onload = loadDeliveryTableData;
     </script>
