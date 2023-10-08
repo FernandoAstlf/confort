@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega</title>
+    <style>
+        /* (Estilos já fornecidos anteriormente) */
+    </style>
+    <script>
+        async function loadDeliveryTableData() {
+            try {
+                const response = await fetch('https://confort.azurewebsites.net/orders'); // Substitua pelo endereço correto do seu servidor
+                const data = await response.json();
+
+                const filteredData = data.filter(order => order.productionChecked === 1);
+
+                const groupedData = {};
+                filteredData.forEach(order => {
+                    if (!groupedData[order.reciboName]) {
+                        groupedData[order.reciboName] = {
+                            clientName: order.clientName,
+                            reciboName: order.reciboName,
+                            deliveryDate: order.deliveryDate,
+                            productionChecked: order.productionChecked,
+                            deliveredDate: order.deliveredDate,
+                            products: []
+                        };
+                    }
+                    groupedData[order.reciboName].products.push({
+                        quantidade: order.quantidade,
+                        produto: order.produto,
+                        delivered: order.deliveryChecked === 1
+                    });
+                });
+
+                addOrdersToDeliveryTable(Object.values(groupedData));
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+            }
+        }
+
+        // (Outras funções JS já fornecidas anteriormente)
+
+        window.onload = loadDeliveryTableData;
+    </script>
+</head>
+
+<body>
+    <div class="delivery-container">
+        <h1>Entrega</h1>
+        <table id="deliveryTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Pedido</th>
+                    <th>Data para a Entrega</th>
+                    <th>Status</th>
+                    <th>Data Entregue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- As linhas da tabela serão preenchidas dinamicamente aqui -->
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
