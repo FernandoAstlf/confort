@@ -166,6 +166,7 @@
         async function updateDeliveryStatus(checkbox) {
             const isChecked = checkbox.checked;
             const orderId = checkbox.getAttribute('data-id');
+            console.log("orderId:", orderId);
         
             // Atualize a coluna deliveryDate se isChecked for true
             const deliveryDate = isChecked ? new Date().toISOString() : null;
