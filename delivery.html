@@ -172,7 +172,7 @@
             const deliveryDate = isChecked ? new Date().toISOString() : null;
         
             try {
-                const response = await fetch(`/update-delivery/${orderId}`, {
+                const response = await fetch(`https://confort.azurewebsites.net/update-delivery/${orderId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
