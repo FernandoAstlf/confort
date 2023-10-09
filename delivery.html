@@ -113,11 +113,11 @@
                 const deliveryDateCell = newRow.insertCell(2);
                 const statusCell = newRow.insertCell(3);
                 const deliveredDateCell = newRow.insertCell(4);
-        
+                
                 nameCell.textContent = order.clientName;
                 orderCell.innerHTML = `${order.reciboName} <span class="expand-button" onclick="toggleSubRows(this)">[+]</span>`;
                 deliveryDateCell.textContent = order.deliveryDate;
-                statusCell.innerHTML = `<input type="checkbox" onclick="toggleSubRowCheckboxes(this)" ${order.productionChecked === 1 ? 'checked' : ''}>`;
+                statusCell.innerHTML = `<input type="checkbox" data-id="${order.reciboName}" onclick="updateDeliveryStatus(this)" ${order.productionChecked === 1 ? 'checked' : ''}>`;
                 deliveredDateCell.textContent = order.deliveredDate;
         
                 order.products.forEach(product => {
@@ -130,8 +130,9 @@
         
                     productCell.innerHTML = `
                         ${product.quantidade} ${product.produto} 
-                        <input type="checkbox" ${product.delivered ? 'checked' : ''}>
+                        <input type="checkbox" data-id="${order.reciboName}-${product.produto}" onclick="updateDeliveryStatus(this)" ${product.delivered ? 'checked' : ''}>
                     `;
+
                 });
             });
         }
@@ -162,6 +163,39 @@
                 nextRow = nextRow.nextElementSibling;
             }
         }
+        async function updateDeliveryStatus(checkbox) {
+            const isChecked = checkbox.checked;
+            const orderId = checkbox.getAttribute('data-id');
+        
+            // Atualize a coluna deliveryDate se isChecked for true
+            const deliveryDate = isChecked ? new Date().toISOString() : null;
+        
+            try {
+                const response = await fetch(`/update-delivery/${orderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        deliveryChecked: isChecked ? 1 : 0,
+                        deliveryDate: deliveryDate
+                    })
+                });
+        
+                if (response.ok) {
+                    console.log("Status de entrega atualizado com sucesso!");
+                } else {
+                    console.error("Erro ao atualizar status de entrega:", await response.text());
+                    // Reverter a checkbox se a atualização falhar
+                    checkbox.checked = !isChecked;
+                }
+            } catch (error) {
+                console.error("Erro ao atualizar status de entrega:", error);
+                // Reverter a checkbox se a atualização falhar
+                checkbox.checked = !isChecked;
+            }
+        }
+
 
 
         window.onload = loadDeliveryTableData;
