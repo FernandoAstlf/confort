@@ -112,8 +112,9 @@
         function renderOrders(orders) {          
             const tbody = document.querySelector('tbody');
             tbody.innerHTML = ''; // Limpa o conteúdo atual do tbody
-        
+            
             orders.forEach(order => {
+                const safeReciboName = generateSafeClassName(order.reciboName);
                 const deliveryDate = new Date(order.orderDate);
                 deliveryDate.setDate(deliveryDate.getDate() + 10);
         
@@ -121,12 +122,12 @@
                 tr.innerHTML = `
                     <td>${order.clientName}</td>
                     <td>
-                        <span class="toggle-button" onclick="toggleSubrows('${order.reciboName}')">▶</span>
+                        <span class="toggle-button" onclick="toggleSubrows('${safeReciboName}')">▶</span>
                         ${order.reciboName}
                     </td>
                     <td>${deliveryDate.toLocaleDateString()}</td>
                     <td>
-                        <input type="checkbox" data-main-recibo="${order.reciboName}">
+                        <input type="checkbox" data-main-recibo="${safeReciboName}">
                     </td>
                     <td>${order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : ''}</td>
                 `;
@@ -136,13 +137,13 @@
                 // Aqui, você pode adicionar as sublinhas relacionadas a este pedido
                 // Como um exemplo, vou adicionar uma sublinha fictícia. Você deve adaptar isso para sua lógica.
                 const subTr = document.createElement('tr');
-                subTr.classList.add('subrow', `subrow-${order.reciboName}`);
+                subTr.classList.add('subrow', `subrow-${safeReciboName}`);
                 subTr.innerHTML = `
                     <td></td>
                     <td>Nome do Produto (Quantidade)</td>
                     <td></td>
                     <td>
-                        <input type="checkbox" data-recibo="${order.reciboName}">
+                        <input type="checkbox" data-recibo="${safeReciboName}">
                     </td>
                     <td></td>
                 `;
@@ -156,7 +157,8 @@
         });
         
         function toggleSubrows(reciboName) {
-            const subrows = document.querySelectorAll(`.subrow-${reciboName}`);
+            const safeReciboName = generateSafeClassName(reciboName);
+            const subrows = document.querySelectorAll(`.subrow-${safeReciboName}`);
             subrows.forEach(subrow => {
                 if (subrow.style.display === 'none' || subrow.style.display === '') {
                     subrow.style.display = 'table-row';
@@ -167,16 +169,16 @@
         }
         
         function updateMainCheckbox(reciboName, mainCheckbox) {
-            const subCheckboxes = document.querySelectorAll(`input[data-recibo="${reciboName}"]`);
+            const subCheckboxes = document.querySelectorAll(`input[data-recibo="${safeReciboName}"]`);
             subCheckboxes.forEach(checkbox => {
                 checkbox.checked = mainCheckbox.checked;
             });
         }
 
         function updateSubCheckbox(reciboName, subCheckbox) {
-            const mainCheckbox = document.querySelector(`input[data-main-recibo="${reciboName}"]`);
-            const allSubCheckboxes = document.querySelectorAll(`input[data-recibo="${reciboName}"]`);
-            const checkedSubCheckboxes = document.querySelectorAll(`input[data-recibo="${reciboName}"]:checked`);
+            const mainCheckbox = document.querySelector(`input[data-main-recibo="${safeReciboName}"]`);
+            const allSubCheckboxes = document.querySelectorAll(`input[data-recibo="${safeReciboName}"]`);
+            const checkedSubCheckboxes = document.querySelectorAll(`input[data-recibo="${safeReciboName}"]:checked`);
         
             if (allSubCheckboxes.length === checkedSubCheckboxes.length) {
                 mainCheckbox.checked = true;
@@ -184,6 +186,12 @@
                 mainCheckbox.checked = false;
             }
         }
+
+        function generateSafeClassName(name) {
+            return name.replace(/[^a-zA-Z0-9]/g, '_');
+        }
+        const safeReciboName = generateSafeClassName(order.reciboName);
+
 
         
 
