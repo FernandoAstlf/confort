@@ -141,16 +141,17 @@
                     const id = order.id; // Supondo que cada pedido tenha um ID
         
                     try {
-                        const response = await fetch(`https://confort.azurewebsites.net/update-production-by-recibo/${safeReciboName}`, {
+                        const response = await fetch(`https://confort.azurewebsites.net/update-delivery-by-recibo/${safeReciboName}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                productionChecked: isChecked ? 1 : 0,
-                                productionDate: isChecked ? new Date().toISOString() : null
+                                deliveryChecked: isChecked ? 1 : 0,
+                                deliveryDate: isChecked ? new Date().toISOString() : null
                             })
                         });
+
         
                         if (!response.ok) {
                             throw new Error('Erro ao atualizar o banco de dados');
