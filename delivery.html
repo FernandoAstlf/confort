@@ -200,8 +200,10 @@
         });
         
         function toggleSubrows(reciboName) {
+            console.log("toggleSubrows chamado para:", reciboName); // Adicione esta linha
             const safeReciboName = generateSafeClassName(reciboName);
             const subrows = document.querySelectorAll(`.subrow-${safeReciboName}`);
+            console.log("Sublinhas encontradas:", subrows.length); // Adicione esta linha
             subrows.forEach(subrow => {
                 if (subrow.style.display === 'none' || subrow.style.display === '') {
                     subrow.style.display = 'table-row';
@@ -210,6 +212,8 @@
                 }
             });
         }
+
+
         
         function updateMainCheckbox(reciboName, mainCheckbox) {
             const subCheckboxes = document.querySelectorAll(`input[data-recibo="${safeReciboName}"]`);
