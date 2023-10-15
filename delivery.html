@@ -175,21 +175,18 @@
                 });
         
                 // Supondo que cada pedido tenha uma lista de produtos
-                order.products.forEach(product => {
-                    const subTr = document.createElement('tr');
-                    subTr.classList.add('subrow', `subrow-${safeReciboName}`);
-                    subTr.innerHTML = `
-                        <td></td>
-                        <td>${product.name} (${product.quantity})</td>
-                        <td></td>
-                        <td>
-                            <input type="checkbox" data-recibo="${safeReciboName}">
-                        </td>
-                        <td></td>
-                    `;
-        
-                    tbody.appendChild(subTr);
-                });
+                // Criando a sublinha para o produto e quantidade
+                const subTr = document.createElement('tr');
+                subTr.classList.add('subrow', `subrow-${safeReciboName}`);
+                subTr.innerHTML = `
+                    <td></td>
+                    <td>${order.produto} (${order.quantidade})</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+
+                tbody.appendChild(subTr);
             });
         }
 
