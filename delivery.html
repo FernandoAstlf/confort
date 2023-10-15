@@ -197,7 +197,9 @@
 
         
         document.addEventListener('DOMContentLoaded', async () => {
+            console.log("Tentando buscar pedidos...");
             const orders = await fetchOrders();
+            console.log("Pedidos buscados:", orders);
             renderOrders(orders);
         });
         
