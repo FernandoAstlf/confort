@@ -129,7 +129,7 @@
                 tr.innerHTML = `
                     <td>${order.clientName}</td>
                     <td>
-                        <span class="toggle-button" onclick="toggleSubrows('${safeReciboName}')">▶</span>
+                        <span class="toggle-button" data-recibo="${safeReciboName}">▶</span>
                         ${order.reciboName}
                     </td>
                     <td>${deliveryDate.toLocaleDateString()}</td>
@@ -202,28 +202,38 @@
             const orders = await fetchOrders();
             console.log("Pedidos buscados:", orders);
             renderOrders(orders);
+            const toggleButtons = document.querySelectorAll('.toggle-button');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const reciboName = this.getAttribute('data-recibo');
+                    toggleSubrows(reciboName);
+                });
+            });
         });
         
-        function toggleSubrows(reciboName) {
-            
+       function toggleSubrows(reciboName) {
+           
             const safeReciboName = generateSafeClassName(reciboName);
             const subrows = document.querySelectorAll(`.subrow-${safeReciboName}`);
-            const toggleButton = document.querySelector(`.toggle-button[onclick="toggleSubrows('${safeReciboName}')"]`);
+            const toggleButton = document.querySelector(`.toggle-button[data-recibo="${safeReciboName}"]`);
             let isDisplayed = false;
+        
             subrows.forEach(subrow => {
                 if (subrow.style.display === 'none' || subrow.style.display === '') {
                     subrow.style.display = 'table-row';
+                    isDisplayed = true;
                 } else {
                     subrow.style.display = 'none';
                 }
             });
-
+        
             if (isDisplayed) {
                 toggleButton.classList.add('down');
             } else {
                 toggleButton.classList.remove('down');
             }
         }
+
 
 
         
