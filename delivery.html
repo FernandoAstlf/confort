@@ -100,15 +100,17 @@
         </table>
     </div>
     <script>
+        
         async function fetchOrders() {
             try {
-                const response = await fetch('https://confort.azurewebsites.net/orders');
+                const response = await fetch('https://confort.azurewebsites.net/orders-for-delivery');
                 return await response.json();
             } catch (error) {
-                console.error('Erro ao buscar pedidos:', error);
+                console.error('Erro ao buscar pedidos para entrega:', error);
                 return [];
             }
         }
+
         function renderOrders(orders) {          
             const tbody = document.querySelector('tbody');
             tbody.innerHTML = ''; // Limpa o conteúdo atual do tbody
