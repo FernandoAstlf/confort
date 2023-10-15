@@ -208,6 +208,7 @@
             
             const safeReciboName = generateSafeClassName(reciboName);
             const subrows = document.querySelectorAll(`.subrow-${safeReciboName}`);
+            const toggleButton = document.querySelector(`.toggle-button[onclick="toggleSubrows('${safeReciboName}')"]`);
             let isDisplayed = false;
             subrows.forEach(subrow => {
                 if (subrow.style.display === 'none' || subrow.style.display === '') {
