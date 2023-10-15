@@ -212,7 +212,6 @@
         });
         
        function toggleSubrows(reciboName) {
-           
             const safeReciboName = generateSafeClassName(reciboName);
             const subrows = document.querySelectorAll(`.subrow-${safeReciboName}`);
             const toggleButton = document.querySelector(`.toggle-button[data-recibo="${safeReciboName}"]`);
@@ -221,7 +220,7 @@
             subrows.forEach(subrow => {
                 if (subrow.style.display === 'none' || subrow.style.display === '') {
                     subrow.style.display = 'table-row';
-                    isDisplayed = true;
+                    isDisplayed = true; // Mova esta linha para dentro do if
                 } else {
                     subrow.style.display = 'none';
                 }
@@ -233,6 +232,7 @@
                 toggleButton.classList.remove('down');
             }
         }
+
 
 
 
